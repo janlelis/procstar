@@ -1,0 +1,54 @@
+= Procstar {<img src="https://travis-ci.org/janlelis/procstar.png" />}[https://travis-ci.org/janlelis/procstar]
+
+This gem provides {to_proc}[http://stackoverflow.com/questions/14881125/what-does-to-proc-method-mean] implementations for other classes than just Symbol.
+
+== Setup
+
+    $ gem install procstar
+
+Or in your Gemfile:
+
+    gem 'procstar'
+
+
+== Usage
+
+=== ArrayCallChain
+
+Calls the method named by the first argument and passes the other elements as arguments. It is like using `Symbol#to_proc` with more than one argument.
+
+    require 'procstar/array_call_chain'
+    [1,2,3,4].map &[:*, 5] # => [5, 10, 15, 20]
+    # you can also chain them, if the first parameter is an Array
+    [1,2,3,4].map &[[:to_s, 2],[:+, 'b']]   # => ["1b", "10b", "11b", "100b"]
+
+=== ClassNew
+
+Creates a new instance of the class.
+
+    require 'procstar/class_new'
+    require 'set'
+    [[1,2],[3,5,6,7,3]].map(&Set) # => [Set[1,2], Set[5,6,7,3]]
+
+
+
+=== HashFilter
+
+Use a hash to apply procs to specific objects.
+
+    require 'procstar/hash_filter'
+    [1,2,3,4].map(&{ 2 => lambda {|e| e + 1000}, 4 => :to_s }) # => [1, 1002, 3, '4']
+
+
+=== RegexpMatcher
+
+Use `&/regex/` to match it against strings.
+
+    require 'procstar/regexp_matcher'
+    %w|just another string array|.map    &/[jy]/ # => ["j", nil, nil, "y"]
+    %w|just another string array|.select &/[jy]/ # => ["just", "array"]
+
+
+== More to_proc ideas? Start forking!
+
+Copyright (c) 2010-2014 Jan Lelis. MIT License. Originated from the zucker[https://github.com/janlelis/zucker] gem.
